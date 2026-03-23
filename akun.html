@@ -39,33 +39,34 @@
       gap: 20px;
     }
     
-    /* STATS - RAPiH */
+    /* STATS - SIMPEL HANYA TOTAL AKUN */
     .stats {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     
     .stat-box {
       background: #fff;
       border-radius: 12px;
-      padding: 16px;
+      padding: 20px;
       text-align: center;
       flex: 1;
       border: 1px solid #eee;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      min-width: 120px;
+      min-width: 160px;
     }
     
     .stat-number {
-      font-size: 24px;
+      font-size: 32px;
       font-weight: 700;
       color: #333;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     
     .stat-label {
-      font-size: 12px;
+      font-size: 14px;
       color: #666;
       font-weight: 500;
     }
@@ -159,6 +160,13 @@
     
     .copied {
       background: #4CAF50 !important;
+      animation: pulse 0.3s;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
     
     .item-details {
@@ -228,15 +236,11 @@
 
   <!-- MAIN CONTAINER -->
   <div class="container">
-    <!-- STATS -->
+    <!-- STATS - HANYA TOTAL AKUN -->
     <div class="stats">
       <div class="stat-box">
         <div class="stat-number" id="totalAkun">0</div>
         <div class="stat-label">Total Akun</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number" id="todayAkun">0</div>
-        <div class="stat-label">Hari Ini</div>
       </div>
     </div>
 
@@ -259,7 +263,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  <!-- SCRIPT - DIOPTIMASI -->
+  <!-- SCRIPT - SIMPLIFIED -->
   <script>
     // CONFIG - SAMA DENGAN INDEX
     const CONFIG = {
@@ -278,23 +282,19 @@
     firebase.initializeApp(CONFIG.firebase);
     const db = firebase.database();
 
-    // ELEMENTS
+    // ELEMENTS - HAPUS todayEl
     const listEl = document.getElementById('list');
     const searchEl = document.getElementById('search');
     const totalEl = document.getElementById('totalAkun');
-    const todayEl = document.getElementById('todayAkun');
 
     let akunData = [];
-    const today = new Date().toDateString();
 
-    // STATS
+    // STATS - SIMPEL HANYA TOTAL
     function updateStats(data) {
       totalEl.textContent = data.length;
-      const todayCount = data.filter(d => new Date(d.tanggal).toDateString() === today).length;
-      todayEl.textContent = todayCount;
     }
 
-    // RENDER LIST
+    // RENDER LIST - FIXED BUTTON (NO onclick)
     function renderList(data) {
       if (data.length === 0) {
         listEl.innerHTML = `
@@ -316,7 +316,7 @@
               <strong>ID: ${d.id}</strong>
               <small>Server: ${d.server}</small>
             </div>
-            <button class="copy-btn" onclick="copyID('${d.id}')" title="Copy ID">
+            <button class="copy-btn" title="Copy ID">
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -331,18 +331,44 @@
       });
     }
 
-    // COPY ID
-    function copyID(id) {
-      navigator.clipboard.writeText(id).then(() => {
-        const btn = event.target.closest('.copy-btn');
-        btn.classList.add('copied');
-        btn.innerHTML = '<i class="fas fa-check"></i>';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btn.innerHTML = '<i class="fas fa-copy"></i>';
-        }, 1500);
-      }).catch(() => alert('Gagal copy!'));
-    }
+    // EVENT DELEGATION - COPY BUTTON (FIXED 100%)
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.copy-btn')) {
+        const btn = e.target.closest('.copy-btn');
+        const item = btn.closest('.item');
+        const idText = item.querySelector('.id-server strong').textContent.replace('ID: ', '').trim();
+        
+        // Copy ke clipboard
+        navigator.clipboard.writeText(idText).then(() => {
+          // Visual feedback
+          btn.classList.add('copied');
+          btn.innerHTML = '<i class="fas fa-check"></i>';
+          
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<i class="fas fa-copy"></i>';
+          }, 2000);
+          
+          console.log('✅ Copied ID:', idText);
+        }).catch(err => {
+          console.error('❌ Copy failed:', err);
+          // Fallback untuk browser lama
+          const textArea = document.createElement('textarea');
+          textArea.value = idText;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          
+          btn.classList.add('copied');
+          btn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<i class="fas fa-copy"></i>';
+          }, 2000);
+        });
+      }
+    });
 
     // SEARCH REALTIME
     searchEl.addEventListener('input', e => {
