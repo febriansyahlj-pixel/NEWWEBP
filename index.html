@@ -6,6 +6,7 @@
 <title>FUHH MEMBANTU</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* TAMPIlAN 100% SAMA - TIDAK DIUBAH SATPUN */
 body {
   font-family: 'Poppins', sans-serif;
   background: #f9f9f9;
@@ -78,7 +79,7 @@ footer {
   cursor: pointer;
 }
 
-/* POPUP */
+/* POPUP - SAMA PERSIS */
 .popup {
   position: fixed;
   top:0;
@@ -141,8 +142,8 @@ footer {
 <!-- MAIN POPUP -->
 <div class="popup" id="mainPopup" onclick="clickOutside(event,'main')">
   <div class="popup-box">
-    <div class="popup-toggle-box" onclick="openSubPopup('akun')">TAMBAHKAN AKUN</div>
-    <div class="popup-toggle-box" onclick="openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
+    <div class="popup-toggle-box" onclick="event.stopPropagation();openSubPopup('akun')">TAMBAHKAN AKUN</div>
+    <div class="popup-toggle-box" onclick="event.stopPropagation();openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
   </div>
 </div>
 
@@ -153,7 +154,7 @@ footer {
     <input type="text" id="serverUser" placeholder="Server">
     <input type="text" id="dikirimAkun" placeholder="Dikirim Oleh">
     <input type="file" id="fotoUser" accept="image/*">
-    <button onclick="sendAkunData()">Kirim</button>
+    <button onclick="event.stopPropagation();sendAkunData()">Kirim</button>
   </div>
 </div>
 
@@ -163,7 +164,7 @@ footer {
     <input type="text" id="namaTukang" placeholder="Nama">
     <input type="text" id="rekTukang" placeholder="Rekening">
     <input type="text" id="dikirimPayment" placeholder="Dikirim Oleh">
-    <button onclick="sendPaymentData()">Kirim</button>
+    <button onclick="event.stopPropagation();sendPaymentData()">Kirim</button>
   </div>
 </div>
 
@@ -171,7 +172,9 @@ footer {
 <div class="popup" id="sawerPopup" onclick="clickOutside(event,'sawer')">
   <div class="popup-box">
     <p>Sawer Seikhlasnya Guysss</p>
-    <a href="https://saweria.co/F3br1z"><button>Sawer</button></a>
+    <a href="https://saweria.co/F3br1z" target="_blank">
+      <button onclick="event.stopPropagation();closeSawerPopup()">Sawer</button>
+    </a>
   </div>
 </div>
 
@@ -181,6 +184,7 @@ footer {
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
+/* 🔥 FUNGSI FINAL - SEMUA MASALAH TERATAS! */
 const firebaseConfig = {
   apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
   authDomain: "berkoar-6fc3a.firebaseapp.com",
@@ -193,9 +197,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// POPUP
-function openMainPopup(){mainPopup.style.display='flex';}
-function closeMainPopup(){mainPopup.style.display='none';}
+// TELEGRAM CONFIG
+const TOKEN = '8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM';
+const CHAT_ID = '7717485230';
+
+// ELEMENTS
+const mainPopup = document.getElementById('mainPopup');
+const sawerPopup = document.getElementById('sawerPopup');
+
+// POPUP FUNCTIONS ✅ FIXED
+function openMainPopup(){ mainPopup.style.display='flex'; }
+function closeMainPopup(){ mainPopup.style.display='none'; }
 function openSubPopup(type){
   closeMainPopup();
   document.getElementById(type+'Popup').style.display='flex';
@@ -204,16 +216,18 @@ function closeSubPopup(type){
   document.getElementById(type+'Popup').style.display='none';
   openMainPopup();
 }
-function openSawerPopup(){sawerPopup.style.display='flex';}
+function openSawerPopup(){ sawerPopup.style.display='flex'; }
+function closeSawerPopup(){ sawerPopup.style.display='none'; } // ✅ DITAMBAH
+
 function clickOutside(e,type){
   if(e.target.classList.contains('popup')){
     if(type==='main') closeMainPopup();
     else if(type==='akun'||type==='payment') closeSubPopup(type);
-    else closeSawerPopup();
+    else if(type==='sawer') closeSawerPopup(); // ✅ FIXED
   }
 }
 
-// COMPRESS
+// COMPRESS IMAGE ✅ SAMA
 function compressImage(file, callback){
   const reader = new FileReader();
   reader.readAsDataURL(file);
@@ -234,57 +248,69 @@ function compressImage(file, callback){
   };
 }
 
-// AKUN
+// ✅ AKUN - TELEGRAM + FIREBASE + REDIRECT akun.html
 function sendAkunData(){
-  const id = idUser.value.trim();
-  const server = serverUser.value.trim();
-  const dikirim = dikirimAkun.value.trim();
-  const foto = fotoUser.files[0];
+  const id = document.getElementById('idUser').value.trim();
+  const server = document.getElementById('serverUser').value.trim();
+  const dikirim = document.getElementById('dikirimAkun').value.trim();
+  const foto = document.getElementById('fotoUser').files[0];
+  
   if(!id||!server||!dikirim) return alert('Isi semua!');
   if(foto && foto.size>1048576) return alert('Foto maksimal 1MB!');
 
-  const token='8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM';
-const chat_id='7717485230';
   const tanggal = new Date().toLocaleString('id-ID');
   const kode = id + "_" + server;
-
   const text = `📥 AKUN BARU\n🆔 ${id}\n🌐 ${server}\n👤 Dikirim Oleh: ${dikirim}\n📅 ${tanggal}`;
   const newRef = db.ref('akun').push();
 
   if(foto){
     const formData = new FormData();
-    formData.append("chat_id", chat_id);
+    formData.append("chat_id", CHAT_ID);
     formData.append("photo", foto);
     formData.append("caption", text);
-    fetch(`https://api.telegram.org/bot${token}/sendPhoto`,{method:"POST",body:formData});
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`,{method:"POST",body:formData});
     compressImage(foto,res=>{
       newRef.set({id,server,kode,foto:res,dikirim,tanggal})
-      .then(()=>location.href='akun.html');
+      .then(()=>location.href='akun.html'); // ✅ REDIRECT
     });
   } else {
-    fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
       method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({chat_id,text})
+      body:JSON.stringify({chat_id:CHAT_ID,text})
     });
     newRef.set({id,server,kode,foto:null,dikirim,tanggal})
-    .then(()=>location.href='akun.html');
+    .then(()=>location.href='akun.html'); // ✅ REDIRECT
   }
 }
 
-// PAYMENT
+// ✅ PAYMENT - TELEGRAM + FIREBASE + REDIRECT payment.html
 function sendPaymentData(){
-  const nama = namaTukang.value.trim();
-  const rek = rekTukang.value.trim();
-  const dikirim = dikirimPayment.value.trim();
+  const nama = document.getElementById('namaTukang').value.trim();
+  const rek = document.getElementById('rekTukang').value.trim();
+  const dikirim = document.getElementById('dikirimPayment').value.trim();
+  
   if(!nama||!rek||!dikirim) return alert('Isi semua!');
-  const kode = rek;
+
   const tanggal = new Date().toLocaleString('id-ID');
+  const kode = rek;
+  
+  // TELEGRAM
+  const textPayment = `💰 PAYMENT BARU\n👤 Nama: ${nama}\n🏦 Rekening: ${rek}\n📤 Dikirim Oleh: ${dikirim}\n📅 ${tanggal}`;
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:CHAT_ID, text:textPayment})
+  });
+  
+  // FIREBASE
   db.ref('payment').push({nama,rek,kode,dikirim,tanggal})
-    .then(()=> location.href='payment.html');
+  .then(()=>location.href='payment.html'); // ✅ REDIRECT
 }
 
-// JAM
-setInterval(()=>{ clock.innerText=new Date().toLocaleTimeString('id-ID'); },1000);
+// JAM ✅ SAMA
+setInterval(()=>{ 
+  const clock = document.getElementById('clock');
+  if(clock) clock.innerText=new Date().toLocaleTimeString('id-ID'); 
+},1000);
 </script>
 </body>
 </html>
