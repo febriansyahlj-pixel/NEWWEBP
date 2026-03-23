@@ -58,17 +58,24 @@ img {
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-// 🔐 PROTECT
+// 🔐 PROTECT ADMIN
 if(localStorage.getItem("admin") !== "true"){
   alert("Akses ditolak!");
   location.href = "login.html";
 }
 
-// CONFIG
-firebase.initializeApp({
-  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app"
-});
+// CONFIG FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
+  authDomain: "berkoar-6fc3a.firebaseapp.com",
+  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "berkoar-6fc3a",
+  storageBucket: "berkoar-6fc3a.firebasestorage.app",
+  messagingSenderId: "801041924361",
+  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
+};
 
+firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 // 🚪 LOGOUT
@@ -77,7 +84,7 @@ function logout(){
   location.href="login.html";
 }
 
-// 🔥 LOAD AKUN
+// 🔥 LOAD DATA AKUN
 db.ref('akun').on('value', snap=>{
   akunList.innerHTML = '';
 
@@ -89,7 +96,7 @@ db.ref('akun').on('value', snap=>{
       <div class="box">
         <b>ID:</b> ${data.id}<br>
         <b>Server:</b> ${data.server}<br>
-        <b>Kode:</b> ${data.kode}<br>
+        <b>Kode:</b> ${data.kode || '-'}<br>
         ${data.foto ? `<img src="${data.foto}">` : ``}
         <button onclick="hapusAkun('${key}')">Hapus</button>
       </div>
@@ -97,7 +104,7 @@ db.ref('akun').on('value', snap=>{
   });
 });
 
-// 🔥 LOAD PAYMENT
+// 🔥 LOAD DATA PAYMENT
 db.ref('payment').on('value', snap=>{
   paymentList.innerHTML = '';
 
@@ -109,7 +116,7 @@ db.ref('payment').on('value', snap=>{
       <div class="box">
         <b>Nama:</b> ${data.nama}<br>
         <b>Rekening:</b> ${data.rek}<br>
-        <b>Kode:</b> ${data.kode}<br>
+        <b>Kode:</b> ${data.kode || '-'}<br>
         <button onclick="hapusPayment('${key}')">Hapus</button>
       </div>
     `;
@@ -119,14 +126,14 @@ db.ref('payment').on('value', snap=>{
 // ❌ HAPUS AKUN
 function hapusAkun(key){
   if(confirm("Hapus data ini?")){
-    db.ref('akun/'+key).remove();
+    db.ref('akun/' + key).remove();
   }
 }
 
 // ❌ HAPUS PAYMENT
 function hapusPayment(key){
   if(confirm("Hapus data ini?")){
-    db.ref('payment/'+key).remove();
+    db.ref('payment/' + key).remove();
   }
 }
 </script>
