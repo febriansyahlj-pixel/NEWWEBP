@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin</title>
+<style>
+body{font-family:sans-serif;padding:10px;}
+.box{background:#fff;margin:10px 0;padding:10px;border-radius:10px;}
+button{background:red;color:#fff;border:none;padding:5px;}
+</style>
+</head>
+<body>
+
+<h2>Admin</h2>
+
+<h3>Akun</h3>
+<div id="akun"></div>
+
+<h3>Payment</h3>
+<div id="pay"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
+  authDomain: "berkoar-6fc3a.firebaseapp.com",
+  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "berkoar-6fc3a",
+  storageBucket: "berkoar-6fc3a.firebasestorage.app",
+  messagingSenderId: "801041924361",
+  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// akun
+db.ref('akun').on('value',snap=>{
+  document.getElementById('akun').innerHTML='';
+  snap.forEach(c=>{
+    const d=c.val();
+    document.getElementById('akun').innerHTML+=`
+    <div class="box">
+      ${d.id} - ${d.server}
+      <button onclick="delA('${c.key}')">hapus</button>
+    </div>`;
+  });
+});
+
+// payment
+db.ref('payment').on('value',snap=>{
+  document.getElementById('pay').innerHTML='';
+  snap.forEach(c=>{
+    const d=c.val();
+    document.getElementById('pay').innerHTML+=`
+    <div class="box">
+      ${d.nama} - ${d.rek}
+      <button onclick="delP('${c.key}')">hapus</button>
+    </div>`;
+  });
+});
+
+function delA(k){db.ref('akun/'+k).remove();}
+function delP(k){db.ref('payment/'+k).remove();}
+</script>
+
+</body>
+</html>
