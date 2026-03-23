@@ -16,138 +16,15 @@ body {
   flex-direction: column;
   align-items: center;
 }
-header {
-  width: 100%;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 28px;
-  font-weight: 600;
-}
-.container {
-  width: 90%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-}
-.box:hover { background: #f0f0f0; }
-
-.description {
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 20px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  position: relative;
-}
-#clock {
-  position: absolute;
-  bottom: -25px;
-  right: 15px;
-  font-size: 12px;
-}
-
-footer {
-  margin-top: auto;
-  font-size: 12px;
-  padding: 15px;
-}
-
-.add-btn {
-  position: fixed;
-  bottom: 60px;
-  right: 15px;
-  width: 50px;
-  height: 50px;
-  background: #333;
-  color: #fff;
-  font-size: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* POPUP */
-.popup {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  backdrop-filter: blur(5px);
-  background: rgba(0,0,0,0.3);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.popup-box {
-  background:#fff;
-  padding:15px;
-  border-radius:12px;
-  width:85%;
-  max-width:280px;
-  text-align:center;
-}
-.popup-box input {
-  width: 85%;
-  padding: 6px;
-  margin: 6px 0;
-}
-.popup-box button {
-  padding: 8px 16px;
-  background:#333;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-}
-
-/* PREVIEW */
-#preview {
-  width:100%;
-  margin-top:8px;
-  border-radius:8px;
-  display:none;
-}
-
-/* LOADING */
-.loading {
-  position: fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background: rgba(0,0,0,0.5);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-  font-size:18px;
-  z-index:9999;
-}
-
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#333;
-  color:#fff;
-  padding:10px 20px;
-  border-radius:8px;
-  display:none;
-  font-size:14px;
-}
+header { text-align:center;padding:20px 0;font-size:28px;font-weight:600;}
+.container { width:90%;max-width:400px;display:flex;flex-direction:column;gap:15px;}
+.box { background:#fff;border-radius:12px;padding:18px;text-align:center;cursor:pointer;border:1px solid #ccc;}
+.box:hover { background:#f0f0f0;}
+.add-btn { position:fixed;bottom:60px;right:15px;width:50px;height:50px;background:#333;color:#fff;font-size:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.popup { position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);display:none;justify-content:center;align-items:center;}
+.popup-box { background:#fff;padding:15px;border-radius:12px;width:85%;max-width:280px;text-align:center;}
+.popup-box input { width:85%;padding:6px;margin:6px 0;}
+.popup-box button { padding:8px 16px;background:#333;color:#fff;border:none;border-radius:6px;}
 </style>
 </head>
 
@@ -158,54 +35,33 @@ footer {
 <div class="container">
   <div class="box" onclick="location.href='akun.html'">AKUN HB AN</div>
   <div class="box" onclick="location.href='payment.html'">PAYMENT</div>
-  <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
-
-  <div class="description">
-    Website ini dibuat untuk mengurangi korban HB akun MLBB.
-    <div id="clock"></div>
-  </div>
 </div>
 
 <div class="add-btn" onclick="openMainPopup()">+</div>
 
-<!-- POPUPS -->
-<div class="popup" id="mainPopup" onclick="clickOutside(event,'main')">
+<div class="popup" id="mainPopup">
   <div class="popup-box">
     <div onclick="openSubPopup('akun')">TAMBAHKAN AKUN</div>
     <div onclick="openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
   </div>
 </div>
 
-<div class="popup" id="akunPopup" onclick="clickOutside(event,'akun')">
+<div class="popup" id="akunPopup">
   <div class="popup-box">
     <input type="text" id="idUser" placeholder="ID">
     <input type="text" id="serverUser" placeholder="Server">
-    <input type="file" id="fotoUser" accept="image/*" onchange="previewImage(event)">
-    <img id="preview">
+    <input type="file" id="fotoUser">
     <button onclick="sendAkunData()">Kirim</button>
   </div>
 </div>
 
-<div class="popup" id="paymentPopup" onclick="clickOutside(event,'payment')">
+<div class="popup" id="paymentPopup">
   <div class="popup-box">
     <input type="text" id="namaTukang" placeholder="Nama">
     <input type="text" id="rekTukang" placeholder="Rekening">
     <button onclick="sendPaymentData()">Kirim</button>
   </div>
 </div>
-
-<div class="popup" id="sawerPopup" onclick="clickOutside(event,'sawer')">
-  <div class="popup-box">
-    <p>Sawer Seikhlasnya Guysss</p>
-    <a href="https://saweria.co/F3br1z"><button>Sawer</button></a>
-  </div>
-</div>
-
-<footer>© 2026 Fuhh</footer>
-
-<!-- LOADING & TOAST -->
-<div id="loading" class="loading">Mengirim...</div>
-<div id="toast" class="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -216,114 +72,46 @@ const firebaseConfig = {
   authDomain: "berkoar-6fc3a.firebaseapp.com",
   databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "berkoar-6fc3a",
-  storageBucket: "berkoar-6fc3a.firebasestorage.app",
-  messagingSenderId: "801041924361",
-  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// UI FUNCTIONS
-function previewImage(e){
-  const file = e.target.files[0];
-  if(file){
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = 'block';
-  }
-}
-function showLoading(){ loading.style.display='flex'; }
-function hideLoading(){ loading.style.display='none'; }
-function showToast(msg){
-  toast.innerText = msg;
-  toast.style.display='block';
-  setTimeout(()=> toast.style.display='none',2000);
-}
-
-// POPUP
 function openMainPopup(){mainPopup.style.display='flex';}
-function closeMainPopup(){mainPopup.style.display='none';}
-function openSubPopup(type){closeMainPopup();document.getElementById(type+'Popup').style.display='flex';}
-function closeSubPopup(type){document.getElementById(type+'Popup').style.display='none';openMainPopup();}
-function openSawerPopup(){sawerPopup.style.display='flex';}
-function closeSawerPopup(){sawerPopup.style.display='none';}
-function clickOutside(e,type){
-  if(e.target.classList.contains('popup')){
-    if(type==='main') closeMainPopup();
-    else if(type==='akun'||type==='payment') closeSubPopup(type);
-    else closeSawerPopup();
-  }
-}
+function openSubPopup(t){mainPopup.style.display='none';document.getElementById(t+'Popup').style.display='flex';}
 
-// COMPRESS
-function compressImage(file, callback){
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const img = new Image();
-    img.src = e.target.result;
-    img.onload = function(){
-      const canvas = document.createElement('canvas');
-      let w = img.width, h = img.height;
-      if(w>400){ h*=400/w; w=400; }
-      canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      callback(canvas.toDataURL('image/jpeg',0.7));
-    }
-  }
-  reader.readAsDataURL(file);
-}
-
-// KIRIM AKUN
+// 🔥 AKUN
 function sendAkunData(){
-  const id=idUser.value.trim();
-  const server=serverUser.value.trim();
+  const id=idUser.value;
+  const server=serverUser.value;
   const foto=fotoUser.files[0];
 
-  if(!id||!server) return showToast('Isi semua!');
-  if(foto && foto.size>1048576) return showToast('Max 1MB!');
-
-  showLoading();
-
-  const token='8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM';
-  const chat_id='7717485230';
+  const kode = id + server; // 🔥
 
   const ref=db.ref('akun').push();
 
-  fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(`📥 Akun Baru\nID:${id}\nServer:${server}`)}`);
-
   if(foto){
-    const fd=new FormData();
-    fd.append("chat_id",chat_id);
-    fd.append("photo",foto);
-    fetch(`https://api.telegram.org/bot${token}/sendPhoto`,{method:"POST",body:fd});
-
-    compressImage(foto,(img)=>{
-      ref.set({id,server,foto:img}).then(()=>{
-        hideLoading();
-        showToast('Berhasil!');
-        setTimeout(()=>location.href='akun.html',1000);
-      });
-    });
+    const reader=new FileReader();
+    reader.onload=e=>{
+      ref.set({id,server,kode,foto:e.target.result})
+      .then(()=>location.href='akun.html');
+    }
+    reader.readAsDataURL(foto);
   }else{
-    ref.set({id,server,foto:null}).then(()=>{
-      hideLoading();
-      showToast('Berhasil!');
-      setTimeout(()=>location.href='akun.html',1000);
-    });
+    ref.set({id,server,kode,foto:null})
+    .then(()=>location.href='akun.html');
   }
 }
 
-// PAYMENT
+// 🔥 PAYMENT
 function sendPaymentData(){
-  const nama=namaTukang.value.trim();
-  const rek=rekTukang.value.trim();
-  if(!nama||!rek) return showToast('Isi semua!');
-  db.ref('payment').push({nama,rek})
-  .then(()=> location.href='payment.html');
-}
+  const nama=namaTukang.value;
+  const rek=rekTukang.value;
 
-// CLOCK
-setInterval(()=> clock.innerText=new Date().toLocaleTimeString(),1000);
+  const kode = rek; // 🔥
+
+  db.ref('payment').push({nama,rek,kode})
+  .then(()=>location.href='payment.html');
+}
 </script>
 
 </body>
