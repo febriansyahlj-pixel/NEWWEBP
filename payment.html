@@ -1,115 +1,369 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daftar Payment</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f9f9f9;
-  color: #222;
-  min-height: 100vh;
-  padding: 20px;
-}
-header {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-#search {
-  width: 90%;
-  max-width: 400px;
-  padding: 8px 10px;
-  margin: 0 auto 15px auto;
-  display: block;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-}
-.list {
-  max-width: 400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.item {
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.06);
-}
-.item span {
-  display: block;
-  font-size: 12px;
-  color: #555;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 Daftar Payment Tukang HB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ========================================
+       STYLE SAMA PERSIS INDEX & AKUN - 100% SYNC
+       ======================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    /* STATS - SAMA AKUN */
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      flex: 1;
+      border: 1px solid #eee;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      min-width: 120px;
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    /* SEARCH - SAMA FORM INDEX */
+    #search {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    
+    #search:focus {
+      outline: none;
+      border-color: #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    
+    /* LIST CONTAINER */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    
+    /* ITEM - STYLE SAMA BOX INDEX */
+    .item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .item:hover {
+      background: #f0f0f0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      border-color: #333;
+    }
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+    
+    .nama-rek {
+      font-weight: 600;
+      font-size: 16px;
+      flex: 1;
+    }
+    
+    .nama-rek small {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-top: 2px;
+    }
+    
+    .copy-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    
+    .copy-btn:hover {
+      background: #555;
+      transform: scale(1.05);
+    }
+    
+    .copied {
+      background: #4CAF50 !important;
+    }
+    
+    .item-details {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    
+    .item-details strong {
+      color: #333;
+    }
+    
+    /* EMPTY & LOADING */
+    .empty, .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+    }
+    
+    .empty i, .loading i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #333;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+      .stats { flex-direction: column; gap: 12px; }
+      .item-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+      body { padding: 15px; }
+    }
+    
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 12px;
+      padding: 20px;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
+  <!-- HEADER -->
+  <header><i class="fas fa-wallet"></i> Daftar Payment Tukang HB</header>
 
-<header>Daftar Payment</header>
-<input type="text" id="search" placeholder="Cari Nama / Rekening / Dikirim Oleh...">
-<div class="list" id="list"></div>
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-number" id="totalPayment">0</div>
+        <div class="stat-label">Total Rekening</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="todayPayment">0</div>
+        <div class="stat-label">Hari Ini</div>
+      </div>
+    </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
-  authDomain: "berkoar-6fc3a.firebaseapp.com",
-  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "berkoar-6fc3a",
-  storageBucket: "berkoar-6fc3a.firebasestorage.app",
-  messagingSenderId: "801041924361",
-  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    <!-- SEARCH -->
+    <input type="text" id="search" placeholder="🔍 Cari Nama / Rekening / Pengirim...">
 
-const listEl = document.getElementById('list');
-const searchEl = document.getElementById('search');
-let paymentData = [];
+    <!-- LIST -->
+    <div class="list" id="list">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading payment...</p>
+      </div>
+    </div>
+  </div>
 
-db.ref('payment').on('value', snapshot => {
-  const data = snapshot.val();
-  paymentData = [];
-  listEl.innerHTML = '';
-  for(const key in data){
-    paymentData.push(data[key]);
-  }
-  renderList(paymentData);
-});
+  <!-- FOOTER -->
+  <footer>© 2026 Oleh Fuhh</footer>
 
-function renderList(data){
-  listEl.innerHTML = '';
-  data.forEach(d=>{
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.innerHTML = `
-      <b>Nama:</b> ${d.nama}<br>
-      <b>Rekening:</b> ${d.rek}<br>
-      <b>Dikirim Oleh:</b> ${d.dikirim}<br>
-      <b>Tanggal:</b> ${d.tanggal}
-    `;
-    listEl.appendChild(div);
-  });
-}
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-// SEARCH REALTIME
-searchEl.addEventListener('input', e=>{
-  const q = e.target.value.toLowerCase();
-  const filtered = paymentData.filter(d=> 
-    d.nama.toLowerCase().includes(q) || 
-    d.rek.toLowerCase().includes(q) ||
-    d.dikirim.toLowerCase().includes(q)
-  );
-  renderList(filtered);
-});
-</script>
+  <!-- SCRIPT - DIOPTIMASI & SUPPORT KETERANGAN -->
+  <script>
+    // CONFIG - SAMA DENGAN INDEX
+    const CONFIG = {
+      firebase: {
+        apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
+        authDomain: "berkoar-6fc3a.firebaseapp.com",
+        databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "berkoar-6fc3a",
+        storageBucket: "berkoar-6fc3a.firebasestorage.app",
+        messagingSenderId: "801041924361",
+        appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
+      }
+    };
+
+    // INIT
+    firebase.initializeApp(CONFIG.firebase);
+    const db = firebase.database();
+
+    // ELEMENTS
+    const listEl = document.getElementById('list');
+    const searchEl = document.getElementById('search');
+    const totalEl = document.getElementById('totalPayment');
+    const todayEl = document.getElementById('todayPayment');
+
+    let paymentData = [];
+    const today = new Date().toDateString();
+
+    // STATS
+    function updateStats(data) {
+      totalEl.textContent = data.length;
+      const todayCount = data.filter(d => new Date(d.tanggal).toDateString() === today).length;
+      todayEl.textContent = todayCount;
+    }
+
+    // RENDER LIST
+    function renderList(data) {
+      if (data.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty">
+            <i class="fas fa-wallet"></i>
+            <p>Belum ada data payment</p>
+          </div>
+        `;
+        return;
+      }
+      
+      listEl.innerHTML = '';
+      data.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="item-header">
+            <div class="nama-rek">
+              <strong>${d.nama}</strong>
+              <small>Rek: ${d.rek}</small>
+            </div>
+            <button class="copy-btn" onclick="copyRek('${d.rek}')" title="Copy Rekening">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+          <div class="item-details">
+            <strong>Dikirim:</strong> ${d.dikirim}<br>
+            ${d.keterangan ? `<strong>Keterangan:</strong> ${d.keterangan}<br>` : ''}
+            <strong>Waktu:</strong> ${d.tanggal}
+          </div>
+        `;
+        listEl.appendChild(div);
+      });
+    }
+
+    // COPY REKENING
+    function copyRek(rek) {
+      navigator.clipboard.writeText(rek).then(() => {
+        const btn = event.target.closest('.copy-btn');
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<i class="fas fa-copy"></i>';
+        }, 1500);
+      }).catch(() => alert('Gagal copy!'));
+    }
+
+    // SEARCH REALTIME - INCLUDE KETERANGAN
+    searchEl.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = paymentData.filter(d => 
+        d.nama.toLowerCase().includes(q) || 
+        d.rek.toLowerCase().includes(q) ||
+        (d.dikirim || '').toLowerCase().includes(q) ||
+        (d.keterangan || '').toLowerCase().includes(q) ||
+        (d.tanggal || '').toLowerCase().includes(q)
+      );
+      renderList(filtered);
+    });
+
+    // FIREBASE LISTENER
+    db.ref('payment').on('value', snapshot => {
+      const data = snapshot.val() ? Object.values(snapshot.val()) : [];
+      paymentData = data;
+      updateStats(data);
+      renderList(data);
+    }, error => {
+      listEl.innerHTML = '<div class="empty">Error loading data</div>';
+      console.error('Firebase error:', error);
+    });
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', () => {
+      searchEl.focus();
+    });
+  </script>
 </body>
 </html>
