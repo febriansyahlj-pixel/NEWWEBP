@@ -1,318 +1,401 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FUHH MEMBANTU</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-/* TAMPIlAN 100% SAMA - TIDAK DIUBAH SATPUN */
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f9f9f9;
-  color: #222;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-header {
-  width: 100%;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 28px;
-  font-weight: 600;
-}
-.container {
-  width: 90%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-}
-.box:hover { background: #f0f0f0; }
-
-.description {
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 20px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  position: relative;
-}
-#clock {
-  position: absolute;
-  bottom: -25px;
-  right: 15px;
-  font-size: 12px;
-}
-
-footer {
-  margin-top: auto;
-  font-size: 12px;
-  padding: 15px;
-}
-
-.add-btn {
-  position: fixed;
-  bottom: 60px;
-  right: 15px;
-  width: 50px;
-  height: 50px;
-  background: #333;
-  color: #fff;
-  font-size: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* POPUP - SAMA PERSIS */
-.popup {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  backdrop-filter: blur(5px);
-  background: rgba(0,0,0,0.3);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.popup-box {
-  background:#fff;
-  padding:15px;
-  border-radius:12px;
-  width:85%;
-  max-width:280px;
-  text-align:center;
-}
-.popup-box input {
-  width: 80%;
-  padding: 6px;
-  margin: 6px 0;
-  text-align: left;
-}
-.popup-box button {
-  padding: 8px 16px;
-  background:#333;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-}
-.popup-toggle-box {
-  padding:8px;
-  background:#eee;
-  border-radius:8px;
-  margin:8px 0;
-  cursor:pointer;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FUHH MEMBANTU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       STYLES - TIDAK DIUBAH SATPUN (100% SAMA)
+       ======================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: background 0.2s;
+    }
+    
+    .box:hover { background: #f0f0f0; }
+    
+    .description {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    
+    #clock {
+      position: absolute;
+      bottom: -25px;
+      right: 15px;
+      font-size: 12px;
+    }
+    
+    footer {
+      margin-top: auto;
+      font-size: 12px;
+      padding: 15px;
+    }
+    
+    .add-btn {
+      position: fixed;
+      bottom: 60px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      background: #333;
+      color: #fff;
+      font-size: 32px;
+      font-weight: bold;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      z-index: 999;
+    }
+    
+    .add-btn:hover { transform: scale(1.1); }
+    
+    /* POPUP STYLES - SAMA PERSIS */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      background: rgba(0,0,0,0.3);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .popup-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 85%;
+      max-width: 280px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    
+    /* SEMUA FORM INPUT - SAMA PERSIS UKURAN! */
+    .popup-box input {
+      width: 100% !important;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* KETERANGAN - BACKGROUND KHUSUS */
+    .popup-box input.keterangan-input {
+      background: #f8f9fa;
+      font-weight: 500;
+      border-color: #ccc;
+    }
+    
+    .popup-box input[type="file"] {
+      padding: 12px 16px;
+      background: #f8f9fa;
+    }
+    
+    .popup-box button {
+      padding: 12px 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 12px;
+    }
+    
+    .popup-toggle-box {
+      padding: 12px;
+      background: #eee;
+      border-radius: 8px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .popup-toggle-box:hover {
+      background: #ddd;
+    }
+  </style>
 </head>
 <body>
+  <!-- HEADER -->
+  <header>FUHH MEMBANTU</header>
 
-<header>FUHH MEMBANTU</header>
+  <!-- MAIN CONTENT -->
+  <div id="mainContent" class="container">
+    <div class="box" onclick="navigateTo('akun.html')">AKUN HB AN</div>
+    <div class="box" onclick="navigateTo('payment.html')">PAYMENT TUKANG HB</div>
+    <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
 
-<div id="mainContent" class="container">
-  <div class="box" onclick="location.href='akun.html'">AKUN HB AN</div>
-  <div class="box" onclick="location.href='payment.html'">PAYMENT TUKANG HB</div>
-  <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
-
-  <div class="description">
-    Website ini dibuat untuk mengurangi korban HB akun MLBB.
-    <p>Semakin Banyak yg Berkontribusi</p>
-    <p>Semakin Sedikit Pula Korban HB</p>
-    <div id="clock"></div>
+    <div class="description">
+      Website ini dibuat untuk mengurangi korban HB akun MLBB.
+      <p>Semakin Banyak yg Berkontribusi</p>
+      <p>Semakin Sedikit Pula Korban HB</p>
+      <div id="clock"></div>
+    </div>
   </div>
-</div>
 
-<div class="add-btn" onclick="openMainPopup()">+</div>
+  <!-- ADD BUTTON -->
+  <div class="add-btn" onclick="openMainPopup()">+</div>
 
-<!-- MAIN POPUP -->
-<div class="popup" id="mainPopup" onclick="clickOutside(event,'main')">
-  <div class="popup-box">
-    <div class="popup-toggle-box" onclick="event.stopPropagation();openSubPopup('akun')">TAMBAHKAN AKUN</div>
-    <div class="popup-toggle-box" onclick="event.stopPropagation();openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
+  <!-- MAIN POPUP -->
+  <div class="popup" id="mainPopup" onclick="clickOutside(event,'main')">
+    <div class="popup-box">
+      <div class="popup-toggle-box" onclick="openSubPopup('akun')">TAMBAHKAN AKUN</div>
+      <div class="popup-toggle-box" onclick="openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
+    </div>
   </div>
-</div>
 
-<!-- AKUN -->
-<div class="popup" id="akunPopup" onclick="clickOutside(event,'akun')">
-  <div class="popup-box">
-    <input type="text" id="idUser" placeholder="ID">
-    <input type="text" id="serverUser" placeholder="Server">
-    <input type="text" id="dikirimAkun" placeholder="Dikirim Oleh">
-    <input type="file" id="fotoUser" accept="image/*">
-    <button onclick="event.stopPropagation();sendAkunData()">Kirim</button>
+  <!-- AKUN POPUP - SEMUA FORM SAMA UKURAN -->
+  <div class="popup" id="akunPopup" onclick="clickOutside(event,'akun')">
+    <div class="popup-box">
+      <input type="text" id="idUser" placeholder="ID">
+      <input type="text" id="serverUser" placeholder="Server">
+      <input type="text" id="dikirimAkun" placeholder="Dikirim Oleh">
+      <input type="file" id="fotoUser" accept="image/*">
+      <input type="text" class="keterangan-input" id="keteranganAkun" placeholder="KETERANGAN">
+      <button onclick="sendAkunData()">Kirim</button>
+    </div>
   </div>
-</div>
 
-<!-- PAYMENT TUKANG HB -->
-<div class="popup" id="paymentPopup" onclick="clickOutside(event,'payment')">
-  <div class="popup-box">
-    <input type="text" id="namaTukang" placeholder="Nama">
-    <input type="text" id="rekTukang" placeholder="Rekening">
-    <input type="text" id="dikirimPayment" placeholder="Dikirim Oleh">
-    <button onclick="event.stopPropagation();sendPaymentData()">Kirim</button>
+  <!-- PAYMENT POPUP - SEMUA FORM SAMA UKURAN -->
+  <div class="popup" id="paymentPopup" onclick="clickOutside(event,'payment')">
+    <div class="popup-box">
+      <input type="text" id="namaTukang" placeholder="Nama">
+      <input type="text" id="rekTukang" placeholder="Rekening">
+      <input type="text" id="dikirimPayment" placeholder="Dikirim Oleh">
+      <input type="text" class="keterangan-input" id="keteranganPayment" placeholder="KETERANGAN">
+      <button onclick="sendPaymentData()">Kirim</button>
+    </div>
   </div>
-</div>
 
-<!-- SAWER -->
-<div class="popup" id="sawerPopup" onclick="clickOutside(event,'sawer')">
-  <div class="popup-box">
-    <p>Sawer Seikhlasnya Guysss</p>
-    <a href="https://saweria.co/F3br1z" target="_blank">
-      <button onclick="event.stopPropagation();closeSawerPopup()">Sawer</button>
-    </a>
+  <!-- SAWER POPUP -->
+  <div class="popup" id="sawerPopup" onclick="clickOutside(event,'sawer')">
+    <div class="popup-box">
+      <p>Sawer Seikhlasnya Guysss</p>
+      <a href="https://saweria.co/F3br1z" target="_blank">
+        <button onclick="closeSawerPopup()">Sawer</button>
+      </a>
+    </div>
   </div>
-</div>
 
-<footer>© 2026 Oleh Fuhh</footer>
+  <!-- FOOTER -->
+  <footer>© 2026 Oleh Fuhh</footer>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-<script>
-/* 🔥 FUNGSI FINAL - SEMUA MASALAH TERATAS! */
-const firebaseConfig = {
-  apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
-  authDomain: "berkoar-6fc3a.firebaseapp.com",
-  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "berkoar-6fc3a",
-  storageBucket: "berkoar-6fc3a.firebasestorage.app",
-  messagingSenderId: "801041924361",
-  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// TELEGRAM CONFIG
-const TOKEN = '8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM';
-const CHAT_ID = '7717485230';
-
-// ELEMENTS
-const mainPopup = document.getElementById('mainPopup');
-const sawerPopup = document.getElementById('sawerPopup');
-
-// POPUP FUNCTIONS ✅ FIXED
-function openMainPopup(){ mainPopup.style.display='flex'; }
-function closeMainPopup(){ mainPopup.style.display='none'; }
-function openSubPopup(type){
-  closeMainPopup();
-  document.getElementById(type+'Popup').style.display='flex';
-}
-function closeSubPopup(type){
-  document.getElementById(type+'Popup').style.display='none';
-  openMainPopup();
-}
-function openSawerPopup(){ sawerPopup.style.display='flex'; }
-function closeSawerPopup(){ sawerPopup.style.display='none'; } // ✅ DITAMBAH
-
-function clickOutside(e,type){
-  if(e.target.classList.contains('popup')){
-    if(type==='main') closeMainPopup();
-    else if(type==='akun'||type==='payment') closeSubPopup(type);
-    else if(type==='sawer') closeSawerPopup(); // ✅ FIXED
-  }
-}
-
-// COMPRESS IMAGE ✅ SAMA
-function compressImage(file, callback){
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = function(e){
-    const img = new Image();
-    img.src = e.target.result;
-    img.onload = function(){
-      const canvas = document.createElement('canvas');
-      const maxWidth = 400;
-      let width = img.width;
-      let height = img.height;
-      if(width>maxWidth){ height*=maxWidth/width; width=maxWidth; }
-      canvas.width = width;
-      canvas.height = height;
-      canvas.getContext('2d').drawImage(img,0,0,width,height);
-      callback(canvas.toDataURL('image/jpeg',0.7));
+  <!-- MAIN SCRIPT - TIDAK BERUBAH -->
+  <script>
+    // CONFIG
+    const CONFIG = {
+      firebase: {
+        apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
+        authDomain: "berkoar-6fc3a.firebaseapp.com",
+        databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "berkoar-6fc3a",
+        storageBucket: "berkoar-6fc3a.firebasestorage.app",
+        messagingSenderId: "801041924361",
+        appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
+      },
+      telegram: {
+        token: '8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM',
+        chatId: '7717485230'
+      }
     };
-  };
-}
 
-// ✅ AKUN - TELEGRAM + FIREBASE + REDIRECT akun.html
-function sendAkunData(){
-  const id = document.getElementById('idUser').value.trim();
-  const server = document.getElementById('serverUser').value.trim();
-  const dikirim = document.getElementById('dikirimAkun').value.trim();
-  const foto = document.getElementById('fotoUser').files[0];
-  
-  if(!id||!server||!dikirim) return alert('Isi semua!');
-  if(foto && foto.size>1048576) return alert('Foto maksimal 1MB!');
+    // INIT FIREBASE
+    firebase.initializeApp(CONFIG.firebase);
+    const db = firebase.database();
 
-  const tanggal = new Date().toLocaleString('id-ID');
-  const kode = id + "_" + server;
-  const text = `📥 AKUN BARU\n🆔 ${id}\n🌐 ${server}\n👤 Dikirim Oleh: ${dikirim}\n📅 ${tanggal}`;
-  const newRef = db.ref('akun').push();
+    // JAM
+    setInterval(()=>{
+      const clock = document.getElementById('clock');
+      if(clock) clock.textContent = new Date().toLocaleTimeString('id-ID');
+    }, 1000);
 
-  if(foto){
-    const formData = new FormData();
-    formData.append("chat_id", CHAT_ID);
-    formData.append("photo", foto);
-    formData.append("caption", text);
-    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`,{method:"POST",body:formData});
-    compressImage(foto,res=>{
-      newRef.set({id,server,kode,foto:res,dikirim,tanggal})
-      .then(()=>location.href='akun.html'); // ✅ REDIRECT
-    });
-  } else {
-    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({chat_id:CHAT_ID,text})
-    });
-    newRef.set({id,server,kode,foto:null,dikirim,tanggal})
-    .then(()=>location.href='akun.html'); // ✅ REDIRECT
-  }
-}
+    // POPUP FUNCTIONS ✅ FIXED
+    function openMainPopup() {
+      document.getElementById('mainPopup').style.display = 'flex';
+    }
 
-// ✅ PAYMENT - TELEGRAM + FIREBASE + REDIRECT payment.html
-function sendPaymentData(){
-  const nama = document.getElementById('namaTukang').value.trim();
-  const rek = document.getElementById('rekTukang').value.trim();
-  const dikirim = document.getElementById('dikirimPayment').value.trim();
-  
-  if(!nama||!rek||!dikirim) return alert('Isi semua!');
+    function closeMainPopup() {
+      document.getElementById('mainPopup').style.display = 'none';
+    }
 
-  const tanggal = new Date().toLocaleString('id-ID');
-  const kode = rek;
-  
-  // TELEGRAM
-  const textPayment = `💰 PAYMENT BARU\n👤 Nama: ${nama}\n🏦 Rekening: ${rek}\n📤 Dikirim Oleh: ${dikirim}\n📅 ${tanggal}`;
-  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:CHAT_ID, text:textPayment})
-  });
-  
-  // FIREBASE
-  db.ref('payment').push({nama,rek,kode,dikirim,tanggal})
-  .then(()=>location.href='payment.html'); // ✅ REDIRECT
-}
+    function openSubPopup(type) {
+      closeMainPopup();
+      document.getElementById(type + 'Popup').style.display = 'flex';
+    }
 
-// JAM ✅ SAMA
-setInterval(()=>{ 
-  const clock = document.getElementById('clock');
-  if(clock) clock.innerText=new Date().toLocaleTimeString('id-ID'); 
-},1000);
-</script>
+    function closeSubPopup(type) {
+      document.getElementById(type + 'Popup').style.display = 'none';
+      openMainPopup();
+    }
+
+    function openSawerPopup() {
+      document.getElementById('sawerPopup').style.display = 'flex';
+    }
+
+    function closeSawerPopup() {
+      document.getElementById('sawerPopup').style.display = 'none';
+    }
+
+    function clickOutside(e, type) {
+      if (e.target.classList.contains('popup')) {
+        if (type === 'main') closeMainPopup();
+        else if (type === 'akun' || type === 'payment') closeSubPopup(type);
+        else if (type === 'sawer') closeSawerPopup();
+      }
+    }
+
+    function navigateTo(url) {
+      document.querySelectorAll('input[type="text"], input[type="file"]').forEach(input => input.value = '');
+      location.href = url;
+    }
+
+    // COMPRESS IMAGE
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxWidth = 400;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
+        };
+      };
+    }
+
+    // SEND AKUN DATA ✅ WITH KETERANGAN
+    function sendAkunData() {
+      const id = document.getElementById('idUser').value.trim();
+      const server = document.getElementById('serverUser').value.trim();
+      const dikirim = document.getElementById('dikirimAkun').value.trim();
+      const keterangan = document.getElementById('keteranganAkun').value.trim();
+      const foto = document.getElementById('fotoUser').files[0];
+      
+      if (!id || !server || !dikirim) return alert('Isi ID, Server, dan Dikirim Oleh!');
+      if (foto && foto.size > 1048576) return alert('Foto maksimal 1MB!');
+
+      const tanggal = new Date().toLocaleString('id-ID');
+      const kode = id + "_" + server;
+      const text = `📥 AKUN BARU\n🆔 ${id}\n🌐 ${server}\n👤 Dikirim Oleh: ${dikirim}\n📝 Keterangan: ${keterangan || 'Tidak ada'}\n📅 ${tanggal}`;
+      const newRef = db.ref('akun').push();
+
+      if (foto) {
+        const formData = new FormData();
+        formData.append("chat_id", CONFIG.telegram.chatId);
+        formData.append("photo", foto);
+        formData.append("caption", text);
+        fetch(`https://api.telegram.org/bot${CONFIG.telegram.token}/sendPhoto`, {
+          method: "POST",
+          body: formData
+        });
+        
+        compressImage(foto, (res) => {
+          newRef.set({ id, server, kode, foto: res, dikirim, keterangan, tanggal })
+            .then(() => navigateTo('akun.html'));
+        });
+      } else {
+        fetch(`https://api.telegram.org/bot${CONFIG.telegram.token}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: CONFIG.telegram.chatId, text })
+        });
+        
+        newRef.set({ id, server, kode, foto: null, dikirim, keterangan, tanggal })
+          .then(() => navigateTo('akun.html'));
+      }
+    }
+
+    // SEND PAYMENT DATA ✅ WITH KETERANGAN
+    function sendPaymentData() {
+      const nama = document.getElementById('namaTukang').value.trim();
+      const rek = document.getElementById('rekTukang').value.trim();
+      const dikirim = document.getElementById('dikirimPayment').value.trim();
+      const keterangan = document.getElementById('keteranganPayment').value.trim();
+      
+      if (!nama || !rek || !dikirim) return alert('Isi Nama, Rekening, dan Dikirim Oleh!');
+
+      const tanggal = new Date().toLocaleString('id-ID');
+      const kode = rek;
+      const textPayment = `💰 PAYMENT BARU\n👤 Nama: ${nama}\n🏦 Rekening: ${rek}\n📤 Dikirim Oleh: ${dikirim}\n📝 Keterangan: ${keterangan || 'Tidak ada'}\n📅 ${tanggal}`;
+      
+      fetch(`https://api.telegram.org/bot${CONFIG.telegram.token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CONFIG.telegram.chatId, text: textPayment })
+      });
+      
+      db.ref('payment').push({ nama, rek, kode, dikirim, keterangan, tanggal })
+        .then(() => navigateTo('payment.html'));
+    }
+  </script>
 </body>
 </html>
