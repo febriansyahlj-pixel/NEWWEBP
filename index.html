@@ -39,7 +39,6 @@ header {
   box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 .box:hover { background: #f0f0f0; }
-
 .description {
   background: #fff;
   padding: 15px;
@@ -55,13 +54,11 @@ header {
   right: 15px;
   font-size: 12px;
 }
-
 footer {
   margin-top: auto;
   font-size: 12px;
   padding: 15px;
 }
-
 .add-btn {
   position: fixed;
   bottom: 60px;
@@ -126,7 +123,7 @@ footer {
 
 <div id="mainContent" class="container">
   <div class="box" onclick="location.href='akun.html'">AKUN HB AN</div>
-  <div class="box" onclick="location.href='payment.html'">PAYMENT TUKANG HB</div>
+  <div class="box" onclick="location.href='payment.html'">PAYMENT</div>
   <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
 
   <div class="description">
@@ -189,13 +186,18 @@ const firebaseConfig = {
   messagingSenderId: "801041924361",
   appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// POPUP
-function openMainPopup(){mainPopup.style.display='flex';}
-function closeMainPopup(){mainPopup.style.display='none';}
+// ambil popup element
+const mainPopup = document.getElementById('mainPopup');
+const akunPopup = document.getElementById('akunPopup');
+const paymentPopup = document.getElementById('paymentPopup');
+const sawerPopup = document.getElementById('sawerPopup');
+
+// POPUP FUNCTIONS
+function openMainPopup(){ mainPopup.style.display='flex'; }
+function closeMainPopup(){ mainPopup.style.display='none'; }
 function openSubPopup(type){
   closeMainPopup();
   document.getElementById(type+'Popup').style.display='flex';
@@ -204,7 +206,7 @@ function closeSubPopup(type){
   document.getElementById(type+'Popup').style.display='none';
   openMainPopup();
 }
-function openSawerPopup(){sawerPopup.style.display='flex';}
+function openSawerPopup(){ sawerPopup.style.display='flex'; }
 function clickOutside(e,type){
   if(e.target.classList.contains('popup')){
     if(type==='main') closeMainPopup();
@@ -213,7 +215,7 @@ function clickOutside(e,type){
   }
 }
 
-// COMPRESS
+// COMPRESS IMAGE
 function compressImage(file, callback){
   const reader = new FileReader();
   reader.readAsDataURL(file);
@@ -222,23 +224,18 @@ function compressImage(file, callback){
     img.src = e.target.result;
     img.onload = function(){
       const canvas = document.createElement('canvas');
-      const maxWidth = 400;
       let width = img.width;
       let height = img.height;
-      if(width > maxWidth){
-        height *= maxWidth / width;
-        width = maxWidth;
-      }
+      if(width>400){ height *= 400/width; width=400; }
       canvas.width = width;
       canvas.height = height;
-      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-      const compressed = canvas.toDataURL('image/jpeg', 0.7);
-      callback(compressed);
+      canvas.getContext('2d').drawImage(img,0,0,width,height);
+      callback(canvas.toDataURL('image/jpeg',0.7));
     };
   };
 }
 
-// 🔥 AKUN
+// AKUN
 function sendAkunData(){
   const id = idUser.value.trim();
   const server = serverUser.value.trim();
@@ -246,16 +243,14 @@ function sendAkunData(){
   const foto = fotoUser.files[0];
   if(!id||!server||!dikirim) return alert('Isi semua!');
   if(foto && foto.size>1048576) return alert('Foto maksimal 1MB!');
-
+  
   const token=8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM;
   const chat_id=7717485230;
   const tanggal = new Date().toLocaleString();
   const kode = id + "_" + server;
-
   const text = `📥 AKUN BARU\n🆔 ${id}\n🌐 ${server}\n👤 Dikirim Oleh: ${dikirim}\n📅 ${tanggal}`;
 
   const newRef = db.ref('akun').push();
-
   if(foto){
     const formData = new FormData();
     formData.append("chat_id", chat_id);
@@ -263,16 +258,14 @@ function sendAkunData(){
     formData.append("caption", text);
     fetch(`https://api.telegram.org/bot${token}/sendPhoto`,{method:"POST",body:formData});
     compressImage(foto,res=>{
-      newRef.set({id,server,kode,foto:res,dikirim,tanggal})
-      .then(()=>location.href='akun.html');
+      newRef.set({id,server,kode,foto:res,dikirim,tanggal}).then(()=>location.href='akun.html');
     });
   } else {
     fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({chat_id,text})
     });
-    newRef.set({id,server,kode,foto:null,dikirim,tanggal})
-    .then(()=>location.href='akun.html');
+    newRef.set({id,server,kode,foto:null,dikirim,tanggal}).then(()=>location.href='akun.html');
   }
 }
 
@@ -284,14 +277,11 @@ function sendPaymentData(){
   if(!nama||!rek||!dikirim) return alert('Isi semua!');
   const kode = rek;
   const tanggal = new Date().toLocaleString();
-  db.ref('payment').push({nama,rek,kode,dikirim,tanggal})
-    .then(()=> location.href='payment.html');
+  db.ref('payment').push({nama,rek,kode,dikirim,tanggal}).then(()=>location.href='payment.html');
 }
 
 // JAM
-setInterval(()=>{
-  clock.innerText=new Date().toLocaleTimeString();
-},1000);
+setInterval(()=>{ clock.innerText=new Date().toLocaleTimeString(); },1000);
 </script>
 </body>
 </html>
