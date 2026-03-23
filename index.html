@@ -112,12 +112,41 @@ footer {
   border:none;
   border-radius:6px;
 }
-.popup-toggle-box {
-  padding:8px;
-  background:#eee;
+
+/* PREVIEW */
+#preview {
+  width:100%;
+  margin-top:8px;
   border-radius:8px;
-  margin:8px 0;
-  cursor:pointer;
+  display:none;
+}
+
+/* LOADING */
+.loading {
+  position: fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background: rgba(0,0,0,0.5);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-size:18px;
+  z-index:9999;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:10px 20px;
+  border-radius:8px;
+  display:none;
+  font-size:14px;
 }
 </style>
 </head>
@@ -126,7 +155,7 @@ footer {
 
 <header>FUHH MEMBANTU</header>
 
-<div id="mainContent" class="container">
+<div class="container">
   <div class="box" onclick="location.href='akun.html'">AKUN HB AN</div>
   <div class="box" onclick="location.href='payment.html'">PAYMENT</div>
   <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
@@ -139,25 +168,24 @@ footer {
 
 <div class="add-btn" onclick="openMainPopup()">+</div>
 
-<!-- MAIN POPUP -->
+<!-- POPUPS -->
 <div class="popup" id="mainPopup" onclick="clickOutside(event,'main')">
   <div class="popup-box">
-    <div class="popup-toggle-box" onclick="openSubPopup('akun')">TAMBAHKAN AKUN</div>
-    <div class="popup-toggle-box" onclick="openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
+    <div onclick="openSubPopup('akun')">TAMBAHKAN AKUN</div>
+    <div onclick="openSubPopup('payment')">TAMBAHKAN PAYMENT</div>
   </div>
 </div>
 
-<!-- AKUN -->
 <div class="popup" id="akunPopup" onclick="clickOutside(event,'akun')">
   <div class="popup-box">
     <input type="text" id="idUser" placeholder="ID">
     <input type="text" id="serverUser" placeholder="Server">
-    <input type="file" id="fotoUser">
+    <input type="file" id="fotoUser" accept="image/*" onchange="previewImage(event)">
+    <img id="preview">
     <button onclick="sendAkunData()">Kirim</button>
   </div>
 </div>
 
-<!-- PAYMENT -->
 <div class="popup" id="paymentPopup" onclick="clickOutside(event,'payment')">
   <div class="popup-box">
     <input type="text" id="namaTukang" placeholder="Nama">
@@ -166,7 +194,6 @@ footer {
   </div>
 </div>
 
-<!-- SAWER -->
 <div class="popup" id="sawerPopup" onclick="clickOutside(event,'sawer')">
   <div class="popup-box">
     <p>Sawer Seikhlasnya Guysss</p>
@@ -176,12 +203,14 @@ footer {
 
 <footer>© 2026 Fuhh</footer>
 
-<!-- FIREBASE -->
+<!-- LOADING & TOAST -->
+<div id="loading" class="loading">Mengirim...</div>
+<div id="toast" class="toast"></div>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-// CONFIG BARU
 const firebaseConfig = {
   apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
   authDomain: "berkoar-6fc3a.firebaseapp.com",
@@ -195,23 +224,29 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// UI FUNCTIONS
+function previewImage(e){
+  const file = e.target.files[0];
+  if(file){
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+  }
+}
+function showLoading(){ loading.style.display='flex'; }
+function hideLoading(){ loading.style.display='none'; }
+function showToast(msg){
+  toast.innerText = msg;
+  toast.style.display='block';
+  setTimeout(()=> toast.style.display='none',2000);
+}
+
 // POPUP
-function openMainPopup(){document.getElementById('mainPopup').style.display='flex';}
-function closeMainPopup(){document.getElementById('mainPopup').style.display='none';}
-
-function openSubPopup(type){
-  closeMainPopup();
-  document.getElementById(type+'Popup').style.display='flex';
-}
-
-function closeSubPopup(type){
-  document.getElementById(type+'Popup').style.display='none';
-  openMainPopup();
-}
-
-function openSawerPopup(){document.getElementById('sawerPopup').style.display='flex';}
-function closeSawerPopup(){document.getElementById('sawerPopup').style.display='none';}
-
+function openMainPopup(){mainPopup.style.display='flex';}
+function closeMainPopup(){mainPopup.style.display='none';}
+function openSubPopup(type){closeMainPopup();document.getElementById(type+'Popup').style.display='flex';}
+function closeSubPopup(type){document.getElementById(type+'Popup').style.display='none';openMainPopup();}
+function openSawerPopup(){sawerPopup.style.display='flex';}
+function closeSawerPopup(){sawerPopup.style.display='none';}
 function clickOutside(e,type){
   if(e.target.classList.contains('popup')){
     if(type==='main') closeMainPopup();
@@ -220,31 +255,75 @@ function clickOutside(e,type){
   }
 }
 
-// KIRIM
+// COMPRESS
+function compressImage(file, callback){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.src = e.target.result;
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if(w>400){ h*=400/w; w=400; }
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      callback(canvas.toDataURL('image/jpeg',0.7));
+    }
+  }
+  reader.readAsDataURL(file);
+}
+
+// KIRIM AKUN
 function sendAkunData(){
   const id=idUser.value.trim();
   const server=serverUser.value.trim();
+  const foto=fotoUser.files[0];
 
-  if(!id||!server) return alert('Isi semua!');
+  if(!id||!server) return showToast('Isi semua!');
+  if(foto && foto.size>1048576) return showToast('Max 1MB!');
 
-  db.ref('akun').push({id,server,foto:null})
-  .then(()=> location.href='akun.html');
+  showLoading();
+
+  const token='8707862536:AAHy5jcse4lm9YmKPJ7AYfuR5JwgxPj1fsM';
+  const chat_id='7717485230';
+
+  const ref=db.ref('akun').push();
+
+  fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(`📥 Akun Baru\nID:${id}\nServer:${server}`)}`);
+
+  if(foto){
+    const fd=new FormData();
+    fd.append("chat_id",chat_id);
+    fd.append("photo",foto);
+    fetch(`https://api.telegram.org/bot${token}/sendPhoto`,{method:"POST",body:fd});
+
+    compressImage(foto,(img)=>{
+      ref.set({id,server,foto:img}).then(()=>{
+        hideLoading();
+        showToast('Berhasil!');
+        setTimeout(()=>location.href='akun.html',1000);
+      });
+    });
+  }else{
+    ref.set({id,server,foto:null}).then(()=>{
+      hideLoading();
+      showToast('Berhasil!');
+      setTimeout(()=>location.href='akun.html',1000);
+    });
+  }
 }
 
+// PAYMENT
 function sendPaymentData(){
   const nama=namaTukang.value.trim();
   const rek=rekTukang.value.trim();
-
-  if(!nama||!rek) return alert('Isi semua!');
-
+  if(!nama||!rek) return showToast('Isi semua!');
   db.ref('payment').push({nama,rek})
   .then(()=> location.href='payment.html');
 }
 
-// JAM
-setInterval(()=>{
-  clock.innerText=new Date().toLocaleTimeString();
-},1000);
+// CLOCK
+setInterval(()=> clock.innerText=new Date().toLocaleTimeString(),1000);
 </script>
 
 </body>
