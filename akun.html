@@ -11,73 +11,55 @@ body {
   background: #f9f9f9;
   color: #222;
   min-height: 100vh;
-  margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 header {
   text-align: center;
-  padding: 20px 0;
   font-size: 28px;
   font-weight: 600;
+  margin-bottom: 20px;
 }
-.container {
-  width: 90%;
-  max-width: 700px;
-  margin: 0 auto;
-}
-.search-box {
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: center;
-}
-.search-box input {
-  width: 80%;
-  max-width: 300px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-table {
+#search {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 30px;
-}
-th, td {
+  max-width: 400px;
+  padding: 8px 10px;
+  margin: 0 auto 15px auto;
+  display: block;
   border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
 }
-th {
-  background: #eee;
+.list {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-img {
-  max-width: 80px;
-  border-radius: 6px;
+.item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+}
+.item img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.item span {
+  display: block;
+  font-size: 12px;
+  color: #555;
 }
 </style>
 </head>
 <body>
 
-<header>Daftar Akun HB AN</header>
-<div class="container">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Cari ID / Server / Dikirim Oleh..." onkeyup="filterTable()">
-  </div>
-  <table id="akunTable">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Server</th>
-        <th>Foto</th>
-        <th>Dikirim Oleh</th>
-        <th>Tanggal Kirim</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Data akan muncul di sini -->
-    </tbody>
-  </table>
-</div>
+<header>Daftar Akun</header>
+<input type="text" id="search" placeholder="Cari ID / Server / Dikirim Oleh...">
+<div class="list" id="list"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -94,37 +76,46 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const tableBody = document.querySelector("#akunTable tbody");
+const listEl = document.getElementById('list');
+const searchEl = document.getElementById('search');
+let akunData = [];
 
-db.ref("akun").on("value", snapshot => {
-  tableBody.innerHTML = "";
-  snapshot.forEach(child => {
-    const data = child.val();
-    const tr = document.createElement("tr");
-
-    const tanggal = data.tanggal ? new Date(data.tanggal).toLocaleString('id-ID', {day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '-';
-    const dikirim = data.dikirimOleh || '-';
-
-    tr.innerHTML = `
-      <td>${data.id}</td>
-      <td>${data.server}</td>
-      <td>${data.foto ? '<img src="'+data.foto+'" alt="Foto">' : '-'}</td>
-      <td>${dikirim}</td>
-      <td>${tanggal}</td>
-    `;
-    tableBody.appendChild(tr);
-  });
+db.ref('akun').on('value', snapshot => {
+  const data = snapshot.val();
+  akunData = [];
+  listEl.innerHTML = '';
+  for(const key in data){
+    akunData.push(data[key]);
+  }
+  renderList(akunData);
 });
 
-function filterTable() {
-  const input = document.getElementById("searchInput").value.toLowerCase();
-  const rows = tableBody.getElementsByTagName("tr");
-  for(let i=0;i<rows.length;i++){
-    const rowText = rows[i].innerText.toLowerCase();
-    rows[i].style.display = rowText.includes(input) ? "" : "none";
-  }
+function renderList(data){
+  listEl.innerHTML = '';
+  data.forEach(d=>{
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <b>ID:</b> ${d.id}<br>
+      <b>Server:</b> ${d.server}<br>
+      <b>Dikirim Oleh:</b> ${d.dikirim}<br>
+      <b>Tanggal:</b> ${d.tanggal}
+      ${d.foto?`<img src="${d.foto}">`:''}
+    `;
+    listEl.appendChild(div);
+  });
 }
-</script>
 
+// SEARCH REALTIME
+searchEl.addEventListener('input', e=>{
+  const q = e.target.value.toLowerCase();
+  const filtered = akunData.filter(d=> 
+    d.id.toLowerCase().includes(q) || 
+    d.server.toLowerCase().includes(q) ||
+    d.dikirim.toLowerCase().includes(q)
+  );
+  renderList(filtered);
+});
+</script>
 </body>
 </html>
