@@ -3,68 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daftar Akun HB AN</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<title>Data Akun</title>
+
 <style>
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #f9f9f9;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  font-family: Arial;
+  background: #f5f5f5;
+  padding: 10px;
 }
-header {
-  font-size:24px;
-  padding:15px;
-}
-.container {
-  width:90%;
-  max-width:400px;
+input {
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 15px;
 }
 .box {
-  background:#fff;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 5px;
 }
 </style>
 </head>
+
 <body>
 
-<header>Daftar Akun HB</header>
-<div class="container" id="akunList"></div>
+<h2>DATA AKUN</h2>
+
+<input type="text" id="search" placeholder="Cari ID / Server / Kode..." onkeyup="filterData()">
+
+<div id="list"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCSDwdzrKNOhyoBHBO8aVq-FxAyZIwFdL4",
-  authDomain: "berkoar-6fc3a.firebaseapp.com",
-  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "berkoar-6fc3a",
-  storageBucket: "berkoar-6fc3a.firebasestorage.app",
-  messagingSenderId: "801041924361",
-  appId: "1:801041924361:web:30e6d18b0e97837a6b93d8"
-};
+firebase.initializeApp({
+  databaseURL: "https://berkoar-6fc3a-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
 
-firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const list = document.getElementById('list');
 
-const akunList = document.getElementById('akunList');
-
+// LOAD DATA
 db.ref('akun').on('value', snap=>{
-  akunList.innerHTML='';
-  snap.forEach(child=>{
-    const d=child.val();
-    akunList.innerHTML+=`
+  list.innerHTML = '';
+
+  snap.forEach(d=>{
+    const data = d.val();
+
+    list.innerHTML += `
       <div class="box">
-        <p>ID: ${d.id}</p>
-        <p>Server: ${d.server}</p>
-        ${d.foto ? `<img src="${d.foto}" width="100%">` : ''}
-      </div>`;
+        <b>ID:</b> ${data.id}<br>
+        <b>Server:</b> ${data.server}<br>
+        <b>Kode:</b> ${data.kode}<br>
+        ${data.foto ? `<img src="${data.foto}">` : `<i>Tidak ada foto</i>`}
+      </div>
+    `;
   });
 });
+
+// SEARCH
+function filterData(){
+  const k = search.value.toLowerCase();
+
+  document.querySelectorAll('.box').forEach(box=>{
+    box.style.display = box.innerText.toLowerCase().includes(k)
+      ? 'block'
+      : 'none';
+  });
+}
 </script>
 
 </body>
