@@ -179,6 +179,7 @@
     <div class="box" onclick="navigateTo('akun.html')">AKUN HB AN</div>
     <div class="box" onclick="navigateTo('payment.html')">PAYMENT TUKANG HB</div>
     <div class="box" onclick="openSawerPopup()">SAWER ADMIN</div>
+    <div class="box" onclick="cekTTL()">CEK TTL ML</div>
 
     <div class="description">
       Website ini dibuat untuk mengurangi korban HB akun MLBB.
@@ -267,6 +268,13 @@
       const clock = document.getElementById('clock');
       if(clock) clock.textContent = new Date().toLocaleTimeString('id-ID');
     }, 1000);
+
+    // CEK TTL FUNCTION
+    function cekTTL() {
+      const message = "Halo Fuhh, Saya Mau Cek TTL Akun ML.";
+      const whatsappUrl = `https://wa.me/081367491916?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
 
     // POPUP FUNCTIONS ✅ FIXED
     function openMainPopup() {
